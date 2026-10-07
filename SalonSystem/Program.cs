@@ -19,6 +19,7 @@ builder.Services.AddScoped<ProductServices>();
 builder.Services.AddScoped<ServiceTypeServices>();
 builder.Services.AddScoped<ServiceSalonServices>();
 builder.Services.AddScoped<OrdersServices>();
+builder.Services.AddScoped<StatusDeleteServices>();
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();

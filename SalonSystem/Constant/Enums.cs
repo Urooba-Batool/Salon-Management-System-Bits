@@ -39,19 +39,6 @@
             WordOfMouth = 3
         }
 
-        public enum controlstatus
-        {
-            roles = 1,
-            employees = 2,
-            brands = 3,
-            categories = 4,
-            orders = 5,
-            products = 6,
-            salonservices = 7,
-            servicetypes = 8,
-            users = 9
-        }
-
         public enum Calculate
         {
             Add = 1,

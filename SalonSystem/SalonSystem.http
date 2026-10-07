@@ -376,3 +376,18 @@ Content-Type: application/json
 //get future orders
 GET {{ss}}/api/order/future
 Accept: application/json
+
+
+
+
+
+
+
+###
+//delete employee
+PATCH {{ss}}/api/statusDelete
+Content-Type: application/json
+{
+  "entityName" : "employees",
+  "entityId" : 3
+}
