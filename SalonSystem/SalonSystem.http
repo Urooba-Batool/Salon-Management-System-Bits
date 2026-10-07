@@ -1,0 +1,378 @@
+@ss = http://localhost:5120
+
+GET {{ss}}/weatherforecast/
+Accept: application/json
+
+###
+//get roles
+GET {{ss}}/api/roles
+Accept: application/json
+
+###
+//get roles by id
+GET {{ss}}/api/roles?roleId=5
+Accept: application/json
+
+###
+//create roles
+POST {{ss}}/api/roles
+Content-Type: application/json
+{
+    "roleName": "Sales"
+}
+
+###
+//update roles details
+PATCH {{ss}}/api/roles/4
+Content-Type: application/json
+{
+  "roleName": "Vendor"
+}
+###
+PATCH {{ss}}/api/roles/4
+Content-Type: application/json
+{
+  "roleStatus": 1
+}
+
+
+
+
+
+
+
+
+###
+//get users
+GET {{ss}}/api/user
+Accept: application/json
+
+###
+//get user by id
+GET {{ss}}/api/user?userId=17
+Accept: application/json
+
+###
+//create user
+Post {{ss}}/api/user
+Content-Type: application/json
+{
+  "firstName" : "shabana",
+  "lastName" : "arif",
+  "userPhone" : "0145-2223454"
+}
+
+###
+//update user details
+PATCH {{ss}}/api/user/17
+Content-Type: application/json
+{
+  "userStatus" : 2
+}
+
+###
+PATCH {{ss}}/api/user/17
+Content-Type: application/json
+{
+  "userTypes" : 2
+}
+
+
+
+
+
+
+
+
+
+
+
+###
+//get employees
+GET {{ss}}/api/employees
+Accept: application/json
+
+###
+//get employee by id
+GET {{ss}}/api/employees?employeeId=3
+Accept: application/json
+
+###
+//create employee
+POST {{ss}}/api/employees
+content-Type: application/json
+{
+  "employeeEmail" : "saad@gmail.com",
+  "employeePassword" : "ssaad",
+  "userId" : 11,
+  "roleId" : 2      ,
+  "employeeCnic" : "1234568090123",
+  "employeeAddress" : "karachi",
+  "employeeSalary" : 70000
+}
+
+###
+//update employee details
+PATCH {{ss}}/api/employees/4
+content-Type: application/json
+{
+  "firstName" : "Afifa",
+  "lastname" : "Akber",
+  "roleId" : 3
+}
+
+###
+PATCH {{ss}}/api/employees/3
+content-Type: application/json
+{
+  "firstName" : "Arif",
+  "lastName" : "Ibrhim",
+  "roleId" : 3,
+  "userId" : 16,
+  "employeeEmail" : "arifgmail.com",
+  "employeePassword" : "arif1122",
+  "employeeCnic" : "1234567835123"
+}
+
+
+
+
+
+
+
+
+
+
+
+###
+//get category
+GET {{ss}}/api/category
+Accept: application/json
+
+###
+//get category by id
+GET {{ss}}/api/category?categoryId=2
+Accept: application/json
+
+###
+//create categories
+POST {{ss}}/api/category
+content-Type: application/json
+{
+  "categoryName" : "Makeup"
+}
+
+###
+//udpate category
+PATCH {{ss}}/api/category/1
+content-Type: application/json
+{
+  "categoryName" : "Hair styling"
+}
+
+
+
+
+
+
+
+
+
+###
+//get brands
+GET {{ss}}/api/brands
+Accept: application/json
+
+###
+//get brands by id
+GET {{ss}}/api/brands?brandId=4
+Accept: application/json
+
+###
+//create brands
+POST {{ss}}/api/brands
+content-Type: application/json
+{
+  "brandName" : "Huda Beauty"
+}
+
+###
+//udpate brands
+PATCH {{ss}}/api/brands/3
+content-Type: application/json
+{
+  "brandName" : "MeClay"
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+###
+//get service type
+GET {{ss}}/api/ServiceType
+Accept: application/json
+
+###
+//get service type by id
+GET {{ss}}/api/serviceType?serviceTypeId=2
+Accept: application/json
+
+###
+//create brands
+POST {{ss}}/api/ServiceType
+content-Type: application/json
+{
+  "serviceTypeName" : "Package"
+}
+
+###
+//udpate brands
+PATCH {{ss}}/api/serviceType/3
+content-Type: application/json
+{
+  "serviceTypeName" : "Standard"
+}
+
+
+
+
+
+
+
+
+
+###
+//get product
+GET {{ss}}/api/product
+Accept: application/json
+
+###
+//get product by id
+GET {{ss}}/api/product?productId=1
+Accept: application/json
+
+###
+//create products
+POST {{ss}}/api/product
+content-Type: application/json
+{
+  "productName" : "Blush",
+  "productPrice" : 5500,
+  "brandId" : 4,
+  "categoryId" : 4,
+  "instockQuantity" : 4
+}
+
+###
+//udpate products
+PATCH {{ss}}/api/product/2
+content-Type: application/json
+{
+  "productName" : "Shampoo",
+  "brandId" : 2
+}
+
+###
+// update products quantity
+PATCH {{ss}}/api/product/3/quantity
+Content-Type: application/json
+{
+  "quantity": 2,
+  "productCalculate" : 2
+}
+
+
+
+
+
+
+
+
+
+
+###
+//get services
+GET {{ss}}/api/SalonService
+Accept: application/json
+
+###
+//get services by id
+GET {{ss}}/api/SalonService?serviceId=3
+Accept: application/json
+
+###
+//create services
+POST {{ss}}/api/SalonService
+content-Type: application/json
+{
+  "serviceName" : "Bridal MAkeup",
+  "servicePrice" : 55000,
+  "serviceTypeId" : 2,
+  "categoryId" : 4
+}
+
+###
+//udpate services
+PATCH {{ss}}/api/SalonService/6
+content-Type: application/json
+{
+  "serviceName" : "Party Makeup",
+  "servicePrice" : 25000
+}
+
+
+
+
+
+
+
+
+### 
+//get orders
+GET {{ss}}/api/order
+Accept: application/json
+
+
+### 
+//get order by id
+GET {{ss}}/api/order?orderId=10
+Accept: application/json
+
+
+###
+//create order
+POST {{ss}}/api/order
+Content-type: application/json
+{
+  "userId" : 14,
+  "employeeId" : 3,
+  "bookedFor" : "2026-11-06T10:00:00",
+  "orderType" : 2,
+  "bookedBy" : 4,
+  "serviceId" : [6, 5],
+  "createdBy" : 4
+}
+
+### 
+//update order
+PATCH {{ss}}/api/order/8
+Content-Type: application/json
+{
+  "orderItems" : [5, 4],
+  "updatedBy" : 4
+}
+
+###
+//get future orders
+GET {{ss}}/api/order/future
+Accept: application/json
