@@ -106,6 +106,7 @@ namespace SalonSystem.Data
                 entity.Property(e => e.CreatedAt).HasColumnName("created_at");
                 entity.Property(e => e.UpdatedBy).HasColumnName("updated_by");
                 entity.Property(e => e.UpdatedAt).HasColumnName("updated_at");
+                entity.Property(e => e.OrderServiceStatus).HasColumnName("order_service_status");
             });
 
             modelBuilder.Entity<Product>(entity =>

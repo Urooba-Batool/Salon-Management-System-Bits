@@ -14,5 +14,6 @@ namespace SalonSystem.Models.DTOs.RequestModels
         public Status? OrderStatus { get; set; }
         public List<int>? OrderItems { get; set; }
         public int? UpdatedBy { get; set; }
+        public Status? OrderServiceStatus { get; set; } 
     }
 }

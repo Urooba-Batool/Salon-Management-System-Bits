@@ -1,5 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using SalonSystem.Constant;
+using static SalonSystem.Constant.Enums;
 
 namespace SalonSystem.Models.Entities
 {
@@ -13,6 +15,7 @@ namespace SalonSystem.Models.Entities
         public int? UpdatedBy { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime? UpdatedAt { get; set; } = DateTime.UtcNow;
+        public Status OrderServiceStatus { get; set; } = Status.Pending;
 
 
 

@@ -53,7 +53,7 @@ namespace SalonSystem.Services
 
             const string sql = """
                 insert into employees(employee_email, employee_password, employee_cnic, user_id, role_id, employee_salary, employee_address, employee_status, created_at)
-                values(@EmployeeEmail, @EmployeePassword, @EmployeeCnic, @UserId, @RoleId, @EmployeeSalary, @EmployeeAddress, 1, current_timestamp)
+                values(@EmployeeEmail, @EmployeePassword, @EmployeeCnic, @UserId, @RoleId, @EmployeeSalary, @EmployeeAddress, @EmployeeStatus, current_timestamp)
                 returning employee_id;                
                 """;
 

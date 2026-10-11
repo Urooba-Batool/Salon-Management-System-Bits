@@ -12,5 +12,6 @@ namespace SalonSystem.Models.DTOs.RequestModels
         public string EmployeeCnic { get; set; } = string.Empty;
         public double EmployeeSalary { get; set; }
         public string EmployeeAddress { get; set; } = string.Empty;
+        public Status EmployeeStatus { get; set; } = Status.Active;  // Default status is Active
     }
 }

@@ -59,7 +59,7 @@ namespace SalonSystem.Services
 
             const string sql = """
                 insert into salon_services(service_name, service_price, service_type_id, category_id, service_status, created_at) 
-                values(@ServiceName, @ServicePrice, @ServiceTypeId, @CategoryId, 1, current_timestamp)
+                values(@ServiceName, @ServicePrice, @ServiceTypeId, @CategoryId, @ServiceStatus, current_timestamp)
                 returning service_id as ServiceId;
                 """;
 

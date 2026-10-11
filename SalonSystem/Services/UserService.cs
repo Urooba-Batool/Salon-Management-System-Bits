@@ -53,7 +53,7 @@ namespace SalonSystem.Services
 
             const string sql = """
                 insert into users(first_name, last_name, user_phone, user_type, user_status, created_at)
-                values(@FirstName, @LastName, @UserPhone, 1, 1, current_timestamp)
+                values(@FirstName, @LastName, @UserPhone, @UserTypes, @UserStatus, current_timestamp)
                 returning user_id as UserId;
                 """;
 

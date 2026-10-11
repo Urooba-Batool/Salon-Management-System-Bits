@@ -1,4 +1,8 @@
-﻿namespace SalonSystem.Models.DTOs.RequestModels
+﻿using System;
+using SalonSystem.Constant;
+using static SalonSystem.Constant.Enums;
+
+namespace SalonSystem.Models.DTOs.RequestModels
 {
     public class CreateProductRequest
     {
@@ -7,5 +11,6 @@
         public int BrandId { get; set; }  // BrandId to connect with the Brand entity (foreign key)
         public int InStockQuantity { get; set; }
         public int CategoryId { get; set; }
+        public Status ProductStatus { get; set; } = Status.Active;
     }
 }

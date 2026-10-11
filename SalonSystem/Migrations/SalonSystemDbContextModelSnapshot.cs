@@ -237,6 +237,10 @@ namespace SalonSystem.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("order_id");
 
+                    b.Property<int>("OrderServiceStatus")
+                        .HasColumnType("integer")
+                        .HasColumnName("order_service_status");
+
                     b.Property<int>("ServiceId")
                         .HasColumnType("integer")
                         .HasColumnName("service_id");

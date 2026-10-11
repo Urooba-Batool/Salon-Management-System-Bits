@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using SalonSystem.Data;
 using SalonSystem.Models.DTOs.RequestModels;
+using static SalonSystem.Constant.Enums;
 
 namespace SalonSystem.Services
 {
@@ -27,7 +28,7 @@ namespace SalonSystem.Services
                 case "roles":
                     sql = """
                         update roles 
-                        set role_status = 2 
+                        set role_status = @EntityStatus
                         where role_id = @EntityId
                         """;
                     break;
@@ -35,7 +36,7 @@ namespace SalonSystem.Services
                 case "brands":
                     sql = """
                         update brands 
-                        set brand_tatus = 2, updated_at = current_timestamp
+                        set brand_status = @EntityStatus, updated_at = current_timestamp
                         where brand_id = @EntityId
                         """;
                     break;
@@ -43,7 +44,7 @@ namespace SalonSystem.Services
                 case "categories":
                     sql = """
                         update categories 
-                        set category_status = 2, updated_at = current_timestamp
+                        set category_status = @EntityStatus, updated_at = current_timestamp
                         where category_id = @EntityId
                         """;
                     break;
@@ -51,7 +52,7 @@ namespace SalonSystem.Services
                 case "employees":
                     sql = """
                         update employees 
-                        set employee_status = 2, updated_at = current_timestamp
+                        set employee_status = @EntityStatus, updated_at = current_timestamp
                         where employee_id = @EntityId
                         """;
                     break;
@@ -59,7 +60,7 @@ namespace SalonSystem.Services
                 case "orders":
                     sql = """
                         update orders 
-                        set order_status = 2, updated_on = current_timestamp
+                        set order_status = @EntityStatus, updated_on = current_timestamp
                         where OrderId = @EntityId;
                         update order_services
                         set updated_at = current_timestamp
@@ -70,7 +71,7 @@ namespace SalonSystem.Services
                 case "products":
                     sql = """
                         update products 
-                        set product_status = 2, updated_at = current_timestamp
+                        set product_status = @EntityStatus, updated_at = current_timestamp
                         where product_id = @EntityId
                         """;
                     break;
@@ -78,7 +79,7 @@ namespace SalonSystem.Services
                 case "services":
                     sql = """
                         update salon_services 
-                        set service_status = 2, updated_at = current_timestamp
+                        set service_status = @EntityStatus, updated_at = current_timestamp
                         where service_id = @EntityId
                         """;
                     break;
@@ -86,7 +87,7 @@ namespace SalonSystem.Services
                 case "servicetypes":
                     sql = """
                         update service_types 
-                        set service_type_status = 2
+                        set service_type_status = @EntityStatus
                         where service_type_id = @EntityId
                         """;
                     break;
@@ -94,7 +95,7 @@ namespace SalonSystem.Services
                 case "users":
                     sql = """
                         update users 
-                        set user_status = 2, updated_at = current_timestamp
+                        set user_status = @EntityStatus, updated_at = current_timestamp
                         where user_id = @EntityId
                         """;
                     break;
@@ -104,7 +105,7 @@ namespace SalonSystem.Services
 
             }
 
-            var RowsAffected = await connection.ExecuteAsync(sql, new { EntityId = request.EntityId});
+            var RowsAffected = await connection.ExecuteAsync(sql, new { EntityId = request.EntityId, EntityStatus = Status.Inactive });
 
             return RowsAffected > 0;
         }

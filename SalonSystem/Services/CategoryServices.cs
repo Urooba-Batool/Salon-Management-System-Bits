@@ -46,7 +46,7 @@ namespace SalonSystem.Services
             using var connection = _connectionFactory.CreateConnection();
             const string sql = """
                 insert into categories (category_name, category_status, created_at)
-                values (@CategoryName, 1, current_timestamp)
+                values (@CategoryName, @CategoryStatus, current_timestamp)
                 returning category_id
                 """;
             return await connection.ExecuteScalarAsync<int>(sql, request);

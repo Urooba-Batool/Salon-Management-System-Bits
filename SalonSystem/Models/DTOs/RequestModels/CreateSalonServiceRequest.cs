@@ -8,5 +8,6 @@ namespace SalonSystem.Models.DTOs.RequestModels
         public double ServicePrice { get; set; }
         public int ServiceTypeId { get; set; } 
         public int CategoryId { get; set; }
+        public Status ServiceStatus { get; set; } = Status.Active;
     }
 }

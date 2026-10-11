@@ -18,7 +18,7 @@ Accept: application/json
 POST {{ss}}/api/roles
 Content-Type: application/json
 {
-    "roleName": "Sales"
+    "roleName": "Support"
 }
 
 ###
@@ -57,9 +57,9 @@ Accept: application/json
 Post {{ss}}/api/user
 Content-Type: application/json
 {
-  "firstName" : "shabana",
-  "lastName" : "arif",
-  "userPhone" : "0145-2223454"
+  "firstName" : "erum",
+  "lastName" : "hammad",
+  "userPhone" : "0123-22456098"
 }
 
 ###
@@ -102,10 +102,10 @@ Accept: application/json
 POST {{ss}}/api/employees
 content-Type: application/json
 {
-  "employeeEmail" : "saad@gmail.com",
-  "employeePassword" : "ssaad",
-  "userId" : 11,
-  "roleId" : 2      ,
+  "employeeEmail" : "asad@gmail.com",
+  "employeePassword" : "alishba",
+  "userId" : 18,
+  "roleId" : 2,
   "employeeCnic" : "1234568090123",
   "employeeAddress" : "karachi",
   "employeeSalary" : 70000
@@ -159,15 +159,15 @@ Accept: application/json
 POST {{ss}}/api/category
 content-Type: application/json
 {
-  "categoryName" : "Makeup"
+  "categoryName" : "Nails"
 }
 
 ###
 //udpate category
-PATCH {{ss}}/api/category/1
+PATCH {{ss}}/api/category/5
 content-Type: application/json
 {
-  "categoryName" : "Hair styling"
+  "categoryStatus" : 2
 }
 
 
@@ -193,7 +193,7 @@ Accept: application/json
 POST {{ss}}/api/brands
 content-Type: application/json
 {
-  "brandName" : "Huda Beauty"
+  "brandName" : "MAc"
 }
 
 ###
@@ -202,6 +202,12 @@ PATCH {{ss}}/api/brands/3
 content-Type: application/json
 {
   "brandName" : "MeClay"
+}
+###
+PATCH {{ss}}/api/brands/3
+content-Type: application/json
+{
+  "brandStatus" : 2
 }
 
 
@@ -228,15 +234,15 @@ GET {{ss}}/api/serviceType?serviceTypeId=2
 Accept: application/json
 
 ###
-//create brands
+//create service type
 POST {{ss}}/api/ServiceType
 content-Type: application/json
 {
-  "serviceTypeName" : "Package"
+  "serviceTypeName" : "Family"
 }
 
 ###
-//udpate brands
+//udpate service type
 PATCH {{ss}}/api/serviceType/3
 content-Type: application/json
 {
@@ -258,7 +264,7 @@ Accept: application/json
 
 ###
 //get product by id
-GET {{ss}}/api/product?productId=1
+GET {{ss}}/api/product?productId=5
 Accept: application/json
 
 ###
@@ -266,11 +272,11 @@ Accept: application/json
 POST {{ss}}/api/product
 content-Type: application/json
 {
-  "productName" : "Blush",
-  "productPrice" : 5500,
-  "brandId" : 4,
+  "productName" : "Lip Liner",
+  "productPrice" : 8000,
+  "brandId" : 5,
   "categoryId" : 4,
-  "instockQuantity" : 4
+  "instockQuantity" : 165
 }
 
 ###
@@ -316,7 +322,7 @@ POST {{ss}}/api/SalonService
 content-Type: application/json
 {
   "serviceName" : "Bridal MAkeup",
-  "servicePrice" : 55000,
+  "servicePrice" : 86000,
   "serviceTypeId" : 2,
   "categoryId" : 4
 }
@@ -345,7 +351,7 @@ Accept: application/json
 
 ### 
 //get order by id
-GET {{ss}}/api/order?orderId=10
+GET {{ss}}/api/order?orderId=16
 Accept: application/json
 
 
@@ -354,23 +360,32 @@ Accept: application/json
 POST {{ss}}/api/order
 Content-type: application/json
 {
-  "userId" : 14,
-  "employeeId" : 3,
-  "bookedFor" : "2026-11-06T10:00:00",
-  "orderType" : 2,
+  "userId" : 12,
+  "employeeId" : 1,
+  "bookedFor" : "2026-10-11T00:30:00",
+  "orderType" : 1,
+  "source" : 1,
   "bookedBy" : 4,
-  "serviceId" : [6, 5],
+  "serviceId" : [3, 6, 5, 4],
   "createdBy" : 4
 }
 
 ### 
 //update order
-PATCH {{ss}}/api/order/8
+PATCH {{ss}}/api/order/13
 Content-Type: application/json
 {
-  "orderItems" : [5, 4],
+  "orderItems" : [6,3],
   "updatedBy" : 4
 }
+###
+PATCH {{ss}}/api/order/10
+Content-Type: application/json
+{
+  "orderStatus" : 3,
+  "updatedBy" : 4
+}
+
 
 ###
 //get future orders
@@ -389,5 +404,21 @@ PATCH {{ss}}/api/statusDelete
 Content-Type: application/json
 {
   "entityName" : "employees",
-  "entityId" : 3
+  "entityId" : 7
+}
+###
+//delete product
+PATCH {{ss}}/api/statusDelete
+Content-Type: application/json
+{
+  "entityName" : "products",
+  "entityId" : 4
+}
+###
+//delete employee
+PATCH {{ss}}/api/statusDelete
+Content-Type: application/json
+{
+  "entityName" : "users",
+  "entityId" : 17
 }

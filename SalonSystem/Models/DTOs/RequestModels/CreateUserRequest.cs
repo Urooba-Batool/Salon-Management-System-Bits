@@ -9,5 +9,7 @@ namespace SalonSystem.Models.DTOs.RequestModels
         public string LastName { get; set; } = string.Empty;
         public string UserPhone { get; set; } = string.Empty;
         public UserType UserTypes { get; set; } = UserType.Customer;
+        public Status UserStatus { get; set; } = Status.Active;
+
     }
 }

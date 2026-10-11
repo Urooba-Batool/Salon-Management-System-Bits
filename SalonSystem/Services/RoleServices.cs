@@ -55,7 +55,7 @@ namespace SalonSystem.Services
 
             const string sql = """
                 insert into roles(role_name, role_status, created_at) 
-                values(@RoleName, 1, current_timestamp)
+                values(@RoleName, @RoleStatus, current_timestamp)
                 returning role_id as RoleId;
                 """;
 

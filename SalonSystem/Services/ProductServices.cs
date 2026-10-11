@@ -53,7 +53,7 @@ namespace SalonSystem.Services
             using var connection = _connectionFactory.CreateConnection();
             const string sql = """
                 insert into products (product_name, product_price, brand_id, instock_quantity, category_id, product_status, created_at)
-                values (@ProductName, @ProductPrice, @BrandId, @InStockQuantity, @CategoryId, 1, current_timestamp)
+                values (@ProductName, @ProductPrice, @BrandId, @InStockQuantity, @CategoryId, @ProductStatus, current_timestamp)
                 returning product_id
                 """;
             return await connection.ExecuteScalarAsync<int>(sql, request);
