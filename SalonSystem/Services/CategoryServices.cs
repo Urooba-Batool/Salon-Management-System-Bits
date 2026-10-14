@@ -1,5 +1,7 @@
 ﻿using Dapper;
+using Microsoft.Extensions.Options;
 using SalonSystem.Data;
+using SalonSystem.Models.Configurations;
 using SalonSystem.Models.DTOs.RequestModels;
 using SalonSystem.Models.DTOs.ResponseModels;
 
@@ -8,23 +10,31 @@ namespace SalonSystem.Services
     public class CategoryServices
     {
         private readonly IDbConnectionFactory _connectionFactory;
+        private readonly PaginationSettings _paginationSettings;
 
-        public CategoryServices(IDbConnectionFactory connectionFactory)
+        public CategoryServices(IDbConnectionFactory connectionFactory, IOptions<PaginationSettings> paginationOptions)
         {
             _connectionFactory = connectionFactory;
+            _paginationSettings = paginationOptions.Value;
         }
 
         // get all category
-        public async Task<IEnumerable<CategoryResponse>> GetAllCategory()
+        public async Task<IEnumerable<CategoryResponse>> GetAllCategory(int pageNumber, int pageSize)
         {
+            pageNumber = Math.Max(pageNumber, 1);
+            pageSize = Math.Clamp(pageSize, 1, _paginationSettings.MaxPageSize);
+            int offset = (pageNumber - 1) * pageSize;
+
             using var connection =  _connectionFactory.CreateConnection();
 
             const string sql = """
                 select c.category_id as CategoryId, c.category_name as CategoryName, c.category_status as CategoryStatus
                 from categories c order by c.category_id
+                limit @PageSize
+                offset @OffSet
                 """;
 
-            return await connection.QueryAsync<CategoryResponse>(sql);
+            return await connection.QueryAsync<CategoryResponse>(sql, new { PageSize = pageSize, Offset = offset });
         }
 
         // get by id

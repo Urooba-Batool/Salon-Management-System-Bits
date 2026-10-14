@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+using SalonSystem.Models.Configurations;
 using SalonSystem.Models.DTOs.RequestModels;
 using SalonSystem.Services;
 
@@ -10,14 +12,16 @@ namespace SalonSystem.Controllers
     public class ProductController : ControllerBase
     {
         private readonly ProductServices _services;
+        private readonly PaginationSettings _paginationSettings;
 
-        public ProductController(ProductServices services)
+        public ProductController(ProductServices services, IOptions<PaginationSettings> paginationOptions)
         {
             _services = services;
+            _paginationSettings = paginationOptions.Value;
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetProducts(int? productId)
+        public async Task<IActionResult> GetProducts(int? productId, [FromQuery] int? pageNumber, [FromQuery] int? pageSize)
         {
             if (productId.HasValue)
             {
@@ -33,7 +37,10 @@ namespace SalonSystem.Controllers
                 return Ok(ser);
             }
 
-            var serv = await _services.GetAllProducts();
+            int finalPageNumber = pageNumber ?? _paginationSettings.DefaultPageNumber;
+            int finalPageSize = pageSize ?? _paginationSettings.DefaultPageSize;
+
+            var serv = await _services.GetAllProducts(finalPageNumber, finalPageSize);
             return Ok(serv);
         }
 

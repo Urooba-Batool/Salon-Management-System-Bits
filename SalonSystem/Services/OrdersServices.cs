@@ -1,5 +1,7 @@
 ﻿using Dapper;
+using Microsoft.Extensions.Options;
 using SalonSystem.Data;
+using SalonSystem.Models.Configurations;
 using SalonSystem.Models.DTOs.RequestModels;
 using SalonSystem.Models.DTOs.ResponseModels;
 using static SalonSystem.Constant.Enums;
@@ -9,15 +11,21 @@ namespace SalonSystem.Services
     public class OrdersServices
     {
         private readonly IDbConnectionFactory _connectionFactory;
+        private readonly PaginationSettings _paginationSettings;
 
-        public OrdersServices(IDbConnectionFactory connectionFactory)
+        public OrdersServices(IDbConnectionFactory connectionFactory, IOptions<PaginationSettings> paginationOptions)
         {
             _connectionFactory = connectionFactory;
+            _paginationSettings = paginationOptions.Value;
         }
 
 
-        public async Task<IEnumerable<OrderResponse>> GetAllOrders()
+        public async Task<IEnumerable<OrderResponse>> GetAllOrders(int pageNumber, int pageSize)
         {
+            pageNumber = Math.Max(pageNumber, 1);
+            pageSize = Math.Clamp(pageSize, 1, _paginationSettings.MaxPageSize);
+            int offset = (pageNumber - 1) * pageSize;
+
             using var connection = _connectionFactory.CreateConnection();
 
             const string sql = """
@@ -34,12 +42,13 @@ namespace SalonSystem.Services
                 left join order_services os on o.order_id = os.order_id
                 left join salon_services s on os.service_id = s.service_id
                 group by o.order_id, u.first_name, u.last_name, ed.EmployeeName, ed.BookedByEmployee, o.booked_for, o.booked_on
-                order by o.booked_for desc;
-
+                order by o.booked_for desc
+                limit @PageSize
+                offset @OffSet;
                 """;
 
 
-            return await connection.QueryAsync<OrderResponse>(sql);
+            return await connection.QueryAsync<OrderResponse>(sql, new { PageSize = pageSize, Offset = offset });
         }
 
         public async Task<OrderResponse?> GetOrderById(int orderId)
@@ -184,8 +193,12 @@ namespace SalonSystem.Services
 
         }
 
-        public async Task<IEnumerable<OrderResponse>> GetFutureOrders()
+        public async Task<IEnumerable<OrderResponse>> GetFutureOrders(int pageNumber, int pageSize)
         {
+            pageNumber = Math.Max(pageNumber, 1);
+            pageSize = Math.Clamp(pageSize, 1, _paginationSettings.MaxPageSize);
+            int offset = (pageNumber - 1) * pageSize;
+
             using var connection = _connectionFactory.CreateConnection();
 
             const string sql = """
@@ -203,11 +216,12 @@ namespace SalonSystem.Services
                 left join salon_services s on os.service_id = s.service_id
                 where o.booked_for > current_timestamp+interval '1 day'
                 group by o.order_id, u.first_name, u.last_name, ed.EmployeeName, o.booked_for, o.booked_on, o.booked_by, o.payment_type, o.total_amount, o.source, o.order_status
-                order by o.booked_for desc;
-
+                order by o.booked_for desc
+                limit @PageSize
+                offset @OffSet
                 """;
 
-            return await connection.QueryAsync<OrderResponse>(sql);
+            return await connection.QueryAsync<OrderResponse>(sql, new { PageSize = pageSize, Offset = offset });
 
         }
     }

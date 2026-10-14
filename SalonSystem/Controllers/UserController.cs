@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using SalonSystem.Models.Configurations;
 using SalonSystem.Models.DTOs.RequestModels;
 using SalonSystem.Models.Entities;
 using SalonSystem.Services;
+using Microsoft.Extensions.Options;
 
 namespace SalonSystem.Controllers
 {
@@ -11,15 +13,17 @@ namespace SalonSystem.Controllers
     public class UserController : ControllerBase
     {
         private readonly UserService _services;
+        private readonly PaginationSettings _paginationSettings;
 
-        public UserController(UserService service)
+        public UserController(UserService service, IOptions<PaginationSettings> paginationSettings)
         {
             _services = service;
+            _paginationSettings = paginationSettings.Value;
         }
 
         //get all users or get user by id
         [HttpGet]
-        public async Task<IActionResult> GetUsers(int? userId)
+        public async Task<IActionResult> GetUsers(int? userId, [FromQuery] int? pageNumber, [FromQuery] int? pageSize)
         {
             if(userId.HasValue)
             {
@@ -34,7 +38,10 @@ namespace SalonSystem.Controllers
                 return Ok(ser);
             }
 
-            var serv = await _services.GetAllUsers();
+            int finalPageNumber = pageNumber ?? _paginationSettings.DefaultPageNumber;
+            int finalPageSize = pageSize ?? _paginationSettings.DefaultPageSize;
+
+            var serv = await _services.GetAllUsers(finalPageNumber, finalPageSize);
 
             return Ok(serv);
         }

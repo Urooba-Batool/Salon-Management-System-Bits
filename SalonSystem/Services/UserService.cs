@@ -3,30 +3,40 @@ using Microsoft.EntityFrameworkCore;
 using SalonSystem.Data;
 using SalonSystem.Models.DTOs.RequestModels;
 using SalonSystem.Models.DTOs.ResponseModels;
+using SalonSystem.Models.Configurations;
+using Microsoft.Extensions.Options;
 
 namespace SalonSystem.Services 
 {
     public class UserService
     {
         private readonly IDbConnectionFactory _connectionFactory;
+        private readonly PaginationSettings _paginationSettings;
 
-        public UserService(IDbConnectionFactory connectionFactory)
+        public UserService(IDbConnectionFactory connectionFactory, IOptions<PaginationSettings> paginationOptions)
         {
             _connectionFactory = connectionFactory;
+            _paginationSettings = paginationOptions.Value;
         }
 
         // get all users 
-        public async Task<IEnumerable<UserResponse>> GetAllUsers()
+        public async Task<IEnumerable<UserResponse>> GetAllUsers(int pageNumber, int pageSize)
         {
+            pageNumber = Math.Max(pageNumber, 1);
+            pageSize = Math.Clamp(pageSize, 1, _paginationSettings.MaxPageSize);
+            int offset = (pageNumber - 1) * pageSize;
+
             using var connection = _connectionFactory.CreateConnection();
 
             const string sql = """
                 select u.user_id as UserId, u.first_name as FirstName, u.last_name as LastName, u.user_phone as UserPhone, u.user_type as UserTypes, u.user_status as UserStatus, u.updated_at as UpdatedAt
                 from users u 
-                order by u.user_id;
+                order by u.user_id
+                limit @PageSize 
+                offset @Offset;
                 """;
 
-            return await connection.QueryAsync<UserResponse>(sql);
+            return await connection.QueryAsync<UserResponse>(sql, new { PageSize = pageSize, Offset = offset });
         }
 
 

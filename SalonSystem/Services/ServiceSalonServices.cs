@@ -2,22 +2,30 @@
 using Dapper;
 using SalonSystem.Models.DTOs.RequestModels;
 using SalonSystem.Models.DTOs.ResponseModels;
+using SalonSystem.Models.Configurations;
+using Microsoft.Extensions.Options;
 
 namespace SalonSystem.Services
 {
     public class ServiceSalonServices
     {
         private readonly IDbConnectionFactory _connectionFactory;
+        private readonly PaginationSettings _paginationSettings;
 
-        public ServiceSalonServices(IDbConnectionFactory connectionFactory)
+        public ServiceSalonServices(IDbConnectionFactory connectionFactory, IOptions<PaginationSettings> paginationOptions)
         {
             _connectionFactory = connectionFactory;
+            _paginationSettings = paginationOptions.Value;
         }
 
 
         // get all services
-        public async Task<IEnumerable<SalonServiceResponse>> GetAllSalonServices()
+        public async Task<IEnumerable<SalonServiceResponse>> GetAllSalonServices(int pageNumber, int pageSize)
         {
+            pageNumber = Math.Max(pageNumber, 1);
+            pageSize = Math.Clamp(pageSize, 1, _paginationSettings.MaxPageSize);
+            int offset = (pageNumber - 1) * pageSize;
+
             using var connection = _connectionFactory.CreateConnection();   // the _connectionFactory calls and gives the postgresql connection
 
             const string sql = """
@@ -25,10 +33,12 @@ namespace SalonSystem.Services
             from salon_services ss 
             left join service_types st on ss.service_type_id = st.service_type_id
             left join categories c on c.category_id = ss.category_id
-            order by ss.service_id;   
+            order by ss.service_id
+            limit @PageSize
+            offset @OffSet
             """;        
 
-            return await connection.QueryAsync<SalonServiceResponse>(sql);     // queryasync returns all the rows or multiple rows 
+            return await connection.QueryAsync<SalonServiceResponse>(sql, new { PageSize = pageSize, Offset = offset });     // queryasync returns all the rows or multiple rows 
         }
 
 

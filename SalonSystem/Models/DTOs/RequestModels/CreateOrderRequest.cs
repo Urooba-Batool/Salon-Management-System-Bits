@@ -1,5 +1,6 @@
 ﻿using SalonSystem.Constant;
 using static SalonSystem.Constant.Enums;
+using System.ComponentModel.DataAnnotations;
 
 namespace SalonSystem.Models.DTOs.RequestModels
 {

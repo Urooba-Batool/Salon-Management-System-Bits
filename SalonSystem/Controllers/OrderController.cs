@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+using SalonSystem.Models.Configurations;
 using SalonSystem.Models.DTOs.RequestModels;
 using SalonSystem.Services;
 
@@ -10,14 +12,16 @@ namespace SalonSystem.Controllers
     public class OrderController : ControllerBase
     {
         private readonly OrdersServices _services;
+        private readonly PaginationSettings _paginationSettings;
 
-        public OrderController(OrdersServices services)
+        public OrderController(OrdersServices services, IOptions<PaginationSettings> paginationOptions)
         {
             _services = services;
+            _paginationSettings = paginationOptions.Value;
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetOrders(int? orderId)
+        public async Task<IActionResult> GetOrders(int? orderId, [FromQuery] int? pageNumber, [FromQuery] int? pageSize)
         {
             if (orderId.HasValue)
             {
@@ -32,15 +36,21 @@ namespace SalonSystem.Controllers
                 return Ok(ser);
             }
 
-            var serv = await _services.GetAllOrders();
+            int finalPageNumber = pageNumber ?? _paginationSettings.DefaultPageNumber;
+            int finalPageSize = pageSize ?? _paginationSettings.DefaultPageSize;
+
+            var serv = await _services.GetAllOrders(finalPageNumber, finalPageSize);
             return Ok(serv);
         }
 
 
         [HttpGet("future")]
-        public async Task<IActionResult> GetFutureOrders()
+        public async Task<IActionResult> GetFutureOrders([FromQuery] int? pageNumber, [FromQuery] int? pageSize)
         {
-            var serv = await _services.GetFutureOrders();
+            int finalPageNumber = pageNumber ?? _paginationSettings.DefaultPageNumber;
+            int finalPageSize = pageSize ?? _paginationSettings.DefaultPageSize;
+            
+            var serv = await _services.GetFutureOrders(finalPageNumber, finalPageSize);
             return Ok(serv);
         }
 

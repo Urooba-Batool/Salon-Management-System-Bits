@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using SalonSystem.Data;
+using SalonSystem.Models.Configurations;
 using SalonSystem.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -7,6 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
+
 builder.Services.AddDbContext<SalonSystemDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddScoped<IDbConnectionFactory, DbConnectionFactory>();
@@ -20,6 +22,7 @@ builder.Services.AddScoped<ServiceTypeServices>();
 builder.Services.AddScoped<ServiceSalonServices>();
 builder.Services.AddScoped<OrdersServices>();
 builder.Services.AddScoped<StatusDeleteServices>();
+builder.Services.Configure<PaginationSettings>(builder.Configuration.GetSection("Pagination"));
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();

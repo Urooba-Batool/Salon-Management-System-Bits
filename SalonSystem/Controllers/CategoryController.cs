@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+using SalonSystem.Models.Configurations;
 using SalonSystem.Models.DTOs.RequestModels;
 using SalonSystem.Models.Entities;
 using SalonSystem.Services;
@@ -11,14 +13,16 @@ namespace SalonSystem.Controllers
     public class CategoryController : ControllerBase
     {
         private readonly CategoryServices _services;
+        private readonly PaginationSettings _paginationSettings;
 
-        public CategoryController(CategoryServices services)
+        public CategoryController(CategoryServices services, IOptions<PaginationSettings> paginationOptions)
         {
             _services = services;
+            _paginationSettings = paginationOptions.Value;
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetCategory(int? categoryId)
+        public async Task<IActionResult> GetCategory(int? categoryId, [FromQuery] int? pageNumber, [FromQuery] int? pageSize)
         {
             if(categoryId.HasValue)
             {
@@ -32,8 +36,10 @@ namespace SalonSystem.Controllers
                 }
                 return Ok(ser);
             }
+            int finalPageNumber = pageNumber ?? _paginationSettings.DefaultPageNumber;
+            int finalPageSize = pageSize ?? _paginationSettings.DefaultPageSize;
 
-            var serv = await _services.GetAllCategory();
+            var serv = await _services.GetAllCategory(finalPageNumber, finalPageSize);
             return Ok(serv);
         }
 

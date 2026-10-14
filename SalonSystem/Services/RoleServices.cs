@@ -26,7 +26,7 @@ namespace SalonSystem.Services
 
             const string sql = """
             select r.role_id as RoleId, r.role_name as RoleName, r.role_status as RoleStatus
-            from roles r order by r.role_id;    
+            from roles r order by r.role_id;        
             """;        // gets all roles even if they are inactive
 
             return await connection.QueryAsync<RolesResponse>(sql);     // queryasync returns all the rows or multiple rows 

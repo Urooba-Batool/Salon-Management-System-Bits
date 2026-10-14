@@ -1,5 +1,7 @@
 ﻿using Dapper;
+using Microsoft.Extensions.Options;
 using SalonSystem.Data;
+using SalonSystem.Models.Configurations;
 using SalonSystem.Models.DTOs.RequestModels;
 using SalonSystem.Models.DTOs.ResponseModels;
 
@@ -8,15 +10,21 @@ namespace SalonSystem.Services
     public class EmployeeService
     {
         private readonly IDbConnectionFactory _connectionFactory;
+        private readonly PaginationSettings _paginationSettings;
 
-        public EmployeeService(IDbConnectionFactory connectionFactory)
+        public EmployeeService(IDbConnectionFactory connectionFactory, IOptions<PaginationSettings> paginationOptions)
         {
             _connectionFactory = connectionFactory;
+            _paginationSettings = paginationOptions.Value;
         }
 
 
-        public async Task<IEnumerable<EmployeeResponse>> GetAllEmployees()
+        public async Task<IEnumerable<EmployeeResponse>> GetAllEmployees(int pageNumber, int pageSize)
         {
+            pageNumber = Math.Max(pageNumber, 1);
+            pageSize = Math.Clamp(pageSize, 1, _paginationSettings.MaxPageSize);
+            int offset = (pageNumber - 1) * pageSize;
+
             using var connection = _connectionFactory.CreateConnection();
 
             const string sql = """
@@ -25,9 +33,11 @@ namespace SalonSystem.Services
                 left join users u on u.user_id = e.user_id
                 left join roles r on r.role_id = e.role_id
                 order by e.employee_id
+                limit @PageSize
+                offset @OffSet
                 """;
 
-            return await connection.QueryAsync<EmployeeResponse>(sql);
+            return await connection.QueryAsync<EmployeeResponse>(sql, new { PageSize = pageSize, Offset = offset });
         }
 
 

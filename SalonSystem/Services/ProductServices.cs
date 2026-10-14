@@ -2,21 +2,29 @@
 using Dapper;
 using SalonSystem.Models.DTOs.RequestModels;
 using SalonSystem.Models.DTOs.ResponseModels;
+using SalonSystem.Models.Configurations;
+using Microsoft.Extensions.Options;
 
 namespace SalonSystem.Services
 {
     public class ProductServices
     {
         private readonly IDbConnectionFactory _connectionFactory;
+        private readonly PaginationSettings _paginationSettings;
 
-        public ProductServices(IDbConnectionFactory connectionFactory)
+        public ProductServices(IDbConnectionFactory connectionFactory, IOptions<PaginationSettings> paginationOptions)
         {
             _connectionFactory = connectionFactory;
+            _paginationSettings = paginationOptions.Value;
         }
 
         // get all Products
-        public async Task<IEnumerable<ProductResponse>> GetAllProducts()
+        public async Task<IEnumerable<ProductResponse>> GetAllProducts(int pageNumber, int pageSize)
         {
+            pageNumber = Math.Max(pageNumber, 1);
+            pageSize = Math.Clamp(pageSize, 1, _paginationSettings.MaxPageSize);
+            int offset = (pageNumber - 1) * pageSize;
+
             using var connection = _connectionFactory.CreateConnection();
 
             const string sql = """
@@ -25,9 +33,11 @@ namespace SalonSystem.Services
                 left join brands b on p.brand_id = b.brand_id
                 left join categories c on p.category_id = c.category_id
                 order by p.product_id
+                limit @PageSize
+                offset @OffSet
                 """;
 
-            return await connection.QueryAsync<ProductResponse>(sql);
+            return await connection.QueryAsync<ProductResponse>(sql, new { PageSize = pageSize, Offset = offset });
         }
 
         // get by id
