@@ -1,10 +1,13 @@
-﻿using static SalonSystem.Constant.Enums;
+﻿using System.ComponentModel.DataAnnotations;
+using static SalonSystem.Constant.Enums;
 
 namespace SalonSystem.Models.DTOs.RequestModels
 {
     public class UpdateSalonServiceRequest
     {
         public string? ServiceName { get; set; }
+
+        [Range(0, double.MaxValue)]
         public double? ServicePrice { get; set; }
         public int? ServiceTypeId { get; set; } // Foreign key to ServiceType
         public Status? ServiceStatus { get; set; }

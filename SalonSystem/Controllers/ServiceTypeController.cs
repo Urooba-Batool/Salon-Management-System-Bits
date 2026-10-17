@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SalonSystem.Models.DTOs.RequestModels;
+using SalonSystem.Models.DTOs.ResponseModels;
 using SalonSystem.Services;
+using System.Collections;
 
 namespace SalonSystem.Controllers
 {
@@ -24,16 +26,26 @@ namespace SalonSystem.Controllers
                 var ser = await _services.GetServiceTypeById(serviceTypeId.Value);
                 if (ser is null)
                 {
-                    return NotFound(new
+                    return NotFound(new ApiResponse<ServiceTypeResponse>
                     {
-                        message = "Service Type not found."
+                        Success = false,
+                        Message = "Service type not found."
                     });
                 }
-                return Ok(ser);
+                return Ok(new ApiResponse<ServiceTypeResponse>
+                {
+                    Success = true,
+                    Data = ser
+                });
             }
 
             var serv = await _services.GetAllServiceType();
-            return Ok(serv);
+
+            return Ok(new ApiResponse<IEnumerable<ServiceTypeResponse>>
+            {
+                Success = true,
+                Data = serv
+            });
         }
 
 
@@ -42,10 +54,11 @@ namespace SalonSystem.Controllers
         {
             var serv = await _services.CreateServiceType(request);
 
-            return CreatedAtAction(nameof(GetServiceTypes), new { serviceTypeId = serv }, new
+            return CreatedAtAction(nameof(GetServiceTypes), new { serviceTypeId = serv }, new ApiResponse<int>
             {
-                message = "Service type created successfully.",
-                serviceTypeId = serv
+                Success = true,
+                Data = serv,
+                Message = "Service type created successfully."
             });
         }
 
@@ -56,15 +69,18 @@ namespace SalonSystem.Controllers
 
             if (!serv)
             {
-                return NotFound(new
+                return NotFound(new ApiResponse<ServiceTypeResponse>
                 {
-                    message = "Service type not found"
+                    Success = false,
+                    Message = "Service type not found."
                 });
             }
 
-            return Ok(new
+            return Ok(new ApiResponse<bool>
             {
-                message = "Service type updated successfully"
+                Success = true,
+                Data = true,
+                Message = "Service type updated successfully"
             });
         }
     }

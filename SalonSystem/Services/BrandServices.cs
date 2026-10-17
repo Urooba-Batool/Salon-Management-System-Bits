@@ -38,7 +38,7 @@ namespace SalonSystem.Services
         }
 
         // get by id
-        public async Task<BrandResponse> GetBrandsById(int brandId)
+        public async Task<BrandResponse?> GetBrandsById(int brandId)
         {
             using var connection = _connectionFactory.CreateConnection();
 

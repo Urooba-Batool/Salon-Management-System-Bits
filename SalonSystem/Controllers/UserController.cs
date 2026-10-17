@@ -1,10 +1,12 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using SalonSystem.Models.Configurations;
 using SalonSystem.Models.DTOs.RequestModels;
+using SalonSystem.Models.DTOs.ResponseModels;
 using SalonSystem.Models.Entities;
 using SalonSystem.Services;
-using Microsoft.Extensions.Options;
+using System.Runtime.ConstrainedExecution;
 
 namespace SalonSystem.Controllers
 {
@@ -30,12 +32,17 @@ namespace SalonSystem.Controllers
                 var ser = await _services.GetUserById(userId.Value);
                 if(ser is null)
                 {
-                    return NotFound(new
+                    return NotFound(new ApiResponse<UserResponse>
                     {
-                        message = "User not found."
+                        Success = false,
+                        Message = "User not found."
                     });
                 }
-                return Ok(ser);
+                return Ok(new ApiResponse<UserResponse>
+                {
+                    Success = true,
+                    Data = ser
+                });
             }
 
             int finalPageNumber = pageNumber ?? _paginationSettings.DefaultPageNumber;
@@ -43,7 +50,11 @@ namespace SalonSystem.Controllers
 
             var serv = await _services.GetAllUsers(finalPageNumber, finalPageSize);
 
-            return Ok(serv);
+            return Ok(new ApiResponse<IEnumerable<UserResponse>>
+            {
+                Success = true,
+                Data = serv
+            });
         }
 
         //create user
@@ -52,10 +63,11 @@ namespace SalonSystem.Controllers
         {
             var serv = await _services.CreateUser(request);
 
-            return CreatedAtAction(nameof(GetUsers), new { userId = serv }, new
+            return CreatedAtAction(nameof(GetUsers), new { userId = serv }, new ApiResponse<int>
             {
-                message = "User created successfully.",
-                userId = serv
+                Success = true,
+                Data = serv,
+                Message = "User created successfully"
             });
         }
 
@@ -68,15 +80,18 @@ namespace SalonSystem.Controllers
 
             if (!serv)
             {
-                return NotFound(new
+                return NotFound(new ApiResponse<UserResponse>
                 {
-                    message = "User not found"
+                    Success = false,
+                    Message = "User not found"
                 });
             }
 
-            return Ok(new
+            return Ok(new ApiResponse<bool>
             {
-                message = "User updated successfully"
+                Success = true,
+                Data = true,
+                Message = "User updated successfully"
             });
         }
 

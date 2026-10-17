@@ -6,16 +6,21 @@ namespace SalonSystem.Models.DTOs.RequestModels
 {
     public class CreateOrderRequest
     {
+        [Required]
         public int UserId { get; set; }  // UserId to link the order to a specific user (foreign key)
         public int? EmployeeId { get; set; }  // EmployeeId to link the order to a specific employee for which the order is booked (foreign key)
         public DateTime BookedFor { get; set; } = DateTime.UtcNow; // Date nd time for which the order is booked
         public OrderType? OrderTypes { get; set; } = OrderType.WalkIn;
+        [Required]
         public DateTime BookedOn { get; set; } = DateTime.UtcNow;  // Timestamp when the order was booked
+        [Required]
         public int BookedBy { get; set; }  // EmployeeId of the person who booked the order (foreign key)
         public PaymentType? PaymentTypes { get; set; } = PaymentType.Cash;
         public Source? Sources { get; set; } = Source.WordOfMouth;
         public Status? OrderStatus { get; set; } = Status.Pending;
+        [Required]
         public List<int> ServiceId { get; set; }
+        [Required]
         public int CreatedBy { get; set; }
         public Status? OrderServiceStatus { get; set; } = Status.Active;
     }

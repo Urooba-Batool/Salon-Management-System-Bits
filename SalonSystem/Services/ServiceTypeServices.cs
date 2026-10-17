@@ -28,7 +28,7 @@ namespace SalonSystem.Services
         }
 
         // get by id
-        public async Task<ServiceTypeResponse> GetServiceTypeById(int serviceTypeId)
+        public async Task<ServiceTypeResponse?> GetServiceTypeById(int serviceTypeId)
         {
             using var connection = _connectionFactory.CreateConnection();
 

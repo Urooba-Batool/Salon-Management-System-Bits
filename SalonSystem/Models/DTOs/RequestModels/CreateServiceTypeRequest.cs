@@ -5,6 +5,7 @@ namespace SalonSystem.Models.DTOs.RequestModels
 {
     public class CreateServiceTypeRequest
     {
+        [Required]
         public string ServiceTypeName { get; set; } = string.Empty;
         public Status ServiceTypeStatus { get; set; } = Status.Active;
     }

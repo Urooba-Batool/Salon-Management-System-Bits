@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using SalonSystem.Models.Configurations;
 using SalonSystem.Models.DTOs.RequestModels;
+using SalonSystem.Models.DTOs.ResponseModels;
 using SalonSystem.Services;
 
 namespace SalonSystem.Controllers
@@ -28,19 +29,28 @@ namespace SalonSystem.Controllers
                 var ser = await _services.GetSalonServiceById(serviceId.Value);
                 if (ser is null)
                 {
-                    return NotFound(new
+                    return NotFound(new ApiResponse<SalonServiceResponse>
                     {
-                        message = "Service not found."
+                        Success = false,
+                        Message = "Service not found."
                     });
                 }
-                return Ok(ser);
+                return Ok(new ApiResponse<SalonServiceResponse>
+                {
+                    Success = true, 
+                    Data = ser
+                });
             }
 
             int finalPageNumber = pageNumber ?? _paginationSettings.DefaultPageNumber;
             int finalPageSize = pageSize ?? _paginationSettings.DefaultPageSize;
 
             var serv = await _services.GetAllSalonServices(finalPageNumber, finalPageSize);
-            return Ok(serv);
+            return Ok(new ApiResponse<IEnumerable<SalonServiceResponse>>
+            {
+                Success = true,
+                Data = serv
+            });
         }
 
 
@@ -49,10 +59,11 @@ namespace SalonSystem.Controllers
         {
             var serv = await _services.CreateService(request);
 
-            return CreatedAtAction(nameof(GetServices), new { serviceId = serv }, new
+            return CreatedAtAction(nameof(GetServices), new { serviceId = serv }, new ApiResponse<int>
             {
-                message = "Service created successfully.",
-                serviceId = serv
+                Success = true,
+                Data = serv,
+                Message = "Service created successfully."
             });
         }
 
@@ -63,15 +74,18 @@ namespace SalonSystem.Controllers
 
             if (!serv)
             {
-                return NotFound(new
+                return NotFound(new ApiResponse<SalonServiceResponse>
                 {
-                    message = "Service not found"
+                    Success = false,
+                    Message = "Service not found"
                 });
             }
 
-            return Ok(new
+            return Ok(new ApiResponse<bool>
             {
-                message = "Service updated successfully"
+                Success = true,
+                Data = true,
+                Message = "Service updated successfully."
             });
         }
     }

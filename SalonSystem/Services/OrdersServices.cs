@@ -193,7 +193,7 @@ namespace SalonSystem.Services
 
         }
 
-        public async Task<IEnumerable<OrderResponse>> GetFutureOrders(int pageNumber, int pageSize)
+        public async Task<IEnumerable<OrderResponse?>> GetFutureOrders(int pageNumber, int pageSize)
         {
             pageNumber = Math.Max(pageNumber, 1);
             pageSize = Math.Clamp(pageSize, 1, _paginationSettings.MaxPageSize);

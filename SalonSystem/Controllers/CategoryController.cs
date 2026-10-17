@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using SalonSystem.Models.Configurations;
 using SalonSystem.Models.DTOs.RequestModels;
+using SalonSystem.Models.DTOs.ResponseModels;
 using SalonSystem.Models.Entities;
 using SalonSystem.Services;
 
@@ -29,18 +30,28 @@ namespace SalonSystem.Controllers
                 var ser = await _services.GetCategoryById(categoryId.Value);
                 if (ser is null)
                 {
-                    return NotFound(new
+                    return NotFound(new ApiResponse<CategoryResponse>
                     {
-                        message = "Category not found."
+                        Success = false,
+                        Message = "Category not found."
                     });
                 }
-                return Ok(ser);
+                return Ok(new ApiResponse<CategoryResponse>
+                {
+                    Success = true,
+                    Data = ser
+                });
             }
             int finalPageNumber = pageNumber ?? _paginationSettings.DefaultPageNumber;
             int finalPageSize = pageSize ?? _paginationSettings.DefaultPageSize;
 
             var serv = await _services.GetAllCategory(finalPageNumber, finalPageSize);
-            return Ok(serv);
+
+            return Ok(new ApiResponse<IEnumerable<CategoryResponse>>
+            {
+                Success = true,
+                Data = serv
+            });
         }
 
 
@@ -49,10 +60,11 @@ namespace SalonSystem.Controllers
         {
             var serv = await _services.CreateCategory(request);
 
-            return CreatedAtAction(nameof(GetCategory), new { categoryId = serv }, new
+            return CreatedAtAction(nameof(GetCategory), new { categoryId = serv }, new ApiResponse<int>
             {
-                message = "Category created successfully.",
-                categoryId = serv
+                Success = true,
+                Data = serv,
+                Message = "Category created successfully."
             });
         }
 
@@ -63,15 +75,18 @@ namespace SalonSystem.Controllers
 
             if (!serv)
             {
-                return NotFound(new
+                return NotFound(new ApiResponse<CategoryResponse>
                 {
-                    message = "Category not found"
+                    Success = false, 
+                    Message = "Category not found"
                 });
             }
 
-            return Ok(new
+            return Ok(new ApiResponse<bool>
             {
-                message = "Category updated successfully"
+                Success = true,
+                Data = true,
+                Message = "Category updated successfully"
             });
         }
     }

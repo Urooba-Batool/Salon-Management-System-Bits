@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using SalonSystem.Models.DTOs.RequestModels;
 using SalonSystem.Services;
+using SalonSystem.Models.DTOs.ResponseModels;
 
 namespace SalonSystem.Controllers
 {
@@ -23,15 +24,18 @@ namespace SalonSystem.Controllers
 
             if (!serv)
             {
-                return NotFound(new
+                return NotFound(new ApiResponse<bool>
                 {
-                    message = "Record not found"
+                    Success = false,
+                    Message = "Record not found"
                 });
             }
 
-            return Ok(new
+            return Ok(new ApiResponse<bool>
             {
-                message = "Status updated successfully"
+                Success = true,
+                Data = true,
+                Message = "Status updated successfully"
             });
 
         }

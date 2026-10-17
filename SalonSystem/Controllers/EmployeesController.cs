@@ -4,6 +4,7 @@ using SalonSystem.Models.Configurations;
 using SalonSystem.Models.DTOs.RequestModels;
 using SalonSystem.Services;
 using Microsoft.Extensions.Options;
+using SalonSystem.Models.DTOs.ResponseModels;
 
 namespace SalonSystem.Controllers
 {
@@ -28,12 +29,17 @@ namespace SalonSystem.Controllers
                 var ser = await _services.GetEmployeeById(employeeId.Value);
                 if (ser is null)
                 {
-                    return NotFound(new
+                    return NotFound(new ApiResponse<EmployeeResponse>
                     {
-                        message = "Employee not found."
+                        Success = false,
+                        Message = "Employee not found."
                     });
                 }
-                return Ok(ser);
+                return Ok(new ApiResponse<EmployeeResponse>
+                {
+                    Success = true, 
+                    Data = ser
+                });
             }
 
             int finalPageNumber = pageNumber ?? _paginationSettings.DefaultPageNumber;
@@ -41,7 +47,11 @@ namespace SalonSystem.Controllers
 
             var serv = await _services.GetAllEmployees(finalPageNumber, finalPageSize);
 
-            return Ok(serv);
+            return Ok(new ApiResponse<IEnumerable<EmployeeResponse>>
+            {
+                Success = true,
+                Data = serv
+            });
         }
 
 
@@ -50,10 +60,11 @@ namespace SalonSystem.Controllers
         {
             var serv = await _services.CreateEmployee(request);
 
-            return CreatedAtAction(nameof(GetEmployees), new { employeeId = serv }, new
+            return CreatedAtAction(nameof(GetEmployees), new { employeeId = serv }, new ApiResponse<int>
             {
-                message = "employee created successfully.",
-                employeeId = serv
+                Success = true,
+                Data = serv,
+                Message = "Employee created successfully.",
             });
         }
 
@@ -63,14 +74,17 @@ namespace SalonSystem.Controllers
             var serv = await _services.UpdateEmployee(employeeId, request);
             if (!serv)
             {
-                return NotFound(new
+                return NotFound(new ApiResponse<EmployeeResponse>
                 {
-                    message = "Employee not found."
+                    Success = false,
+                    Message = "Employee not found."
                 });
             }
-            return Ok(new
+            return Ok(new ApiResponse<bool>
             {
-                message = "Employee updated successfully."
+                Success = true,
+                Data = true,
+                Message = "Employee updated successfully."
             });
         }
     }

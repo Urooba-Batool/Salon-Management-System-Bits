@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using SalonSystem.Models.Configurations;
 using SalonSystem.Models.DTOs.RequestModels;
+using SalonSystem.Models.DTOs.ResponseModels;
 using SalonSystem.Services;
 
 namespace SalonSystem.Controllers
@@ -28,23 +29,30 @@ namespace SalonSystem.Controllers
                 var ser = await _services.GetProductById(productId.Value);
                 if (ser is null)
                 {
-                    return NotFound(new
+                    return NotFound(new ApiResponse<ProductResponse>
                     {
-                        message = "Product not found."
+                        Success = false,
+                        Message = "Product not found."
 
                     });
                 }
-                return Ok(ser);
+                return Ok(new ApiResponse<ProductResponse>
+                {
+                    Success = true,
+                    Data = ser
+                });
             }
 
             int finalPageNumber = pageNumber ?? _paginationSettings.DefaultPageNumber;
             int finalPageSize = pageSize ?? _paginationSettings.DefaultPageSize;
 
             var serv = await _services.GetAllProducts(finalPageNumber, finalPageSize);
-            return Ok(serv);
+            return Ok(new ApiResponse<IEnumerable<ProductResponse>>
+            {
+                Success = true,
+                Data = serv
+            });
         }
-
-
 
 
         [HttpPost]
@@ -52,10 +60,11 @@ namespace SalonSystem.Controllers
         {
             var serv = await _services.CreateProduct(request);
 
-            return CreatedAtAction(nameof(GetProducts), new { productId = serv }, new
+            return CreatedAtAction(nameof(GetProducts), new { productId = serv }, new ApiResponse<int>
             {
-                message = "Product created successfully.",
-                productId = serv
+                Success = true,
+                Data = serv,
+                Message = "Product created successfully."
             });
         }
 
@@ -67,15 +76,17 @@ namespace SalonSystem.Controllers
 
             if (!serv)
             {
-                return NotFound(new
+                return NotFound(new ApiResponse<ProductResponse>
                 {
-                    message = "product not found"
+                    Success = false,
+                    Message = "product not found"
                 });
             }
 
-            return Ok(new
-            {
-                message = "Product updated successfully"
+            return Ok(new ApiResponse<bool>{
+                    Success = true,
+                    Data = true,
+                    Message = "Product updated successfully"
             });
         }
 
@@ -87,15 +98,18 @@ namespace SalonSystem.Controllers
             if (!serv)
             {
 
-                return NotFound(new
+                return NotFound(new ApiResponse<ProductResponse>
                 {
-                    message = "product not found"
+                    Success = false,
+                    Message = "product not found"
                 });
             }
 
-            return Ok(new
+            return Ok(new ApiResponse<bool>
             {
-                message = "Product quantity updated successfully"
+                Success = true,
+                Data = true,
+                Message = "Product quantity updated successfully"
             });
         }
     }

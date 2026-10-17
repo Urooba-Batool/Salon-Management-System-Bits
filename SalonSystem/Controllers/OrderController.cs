@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using SalonSystem.Models.Configurations;
 using SalonSystem.Models.DTOs.RequestModels;
+using SalonSystem.Models.DTOs.ResponseModels;
 using SalonSystem.Services;
 
 namespace SalonSystem.Controllers
@@ -28,19 +29,29 @@ namespace SalonSystem.Controllers
                 var ser = await _services.GetOrderById(orderId.Value);
                 if (ser is null)
                 {
-                    return NotFound(new
+                    return NotFound(new ApiResponse<OrderResponse>
                     {
-                        message = "Order not found."
+                        Success = false,
+                        Message = "Order not found."
                     });
                 }
-                return Ok(ser);
+                return Ok(new ApiResponse<OrderResponse>
+                {
+                    Success = true,
+                    Data = ser
+                });
             }
 
             int finalPageNumber = pageNumber ?? _paginationSettings.DefaultPageNumber;
             int finalPageSize = pageSize ?? _paginationSettings.DefaultPageSize;
 
             var serv = await _services.GetAllOrders(finalPageNumber, finalPageSize);
-            return Ok(serv);
+
+            return Ok(new ApiResponse<IEnumerable<OrderResponse>>
+            {
+                Success = true,
+                Data = serv
+            });
         }
 
 
@@ -51,7 +62,11 @@ namespace SalonSystem.Controllers
             int finalPageSize = pageSize ?? _paginationSettings.DefaultPageSize;
             
             var serv = await _services.GetFutureOrders(finalPageNumber, finalPageSize);
-            return Ok(serv);
+            return Ok(new ApiResponse<IEnumerable<OrderResponse>>
+            {
+                Success = true,
+                Data = serv
+            });
         }
 
         [HttpPost]
@@ -59,10 +74,11 @@ namespace SalonSystem.Controllers
         {
             var serv = await _services.CreateOrder(request);
 
-            return CreatedAtAction(nameof(GetOrders), new { orderId = serv }, new
+            return CreatedAtAction(nameof(GetOrders), new { orderId = serv }, new ApiResponse<int>
             {
-                message = "order created successfully.",
-                orderId = serv
+                Success = true,
+                Data = serv,
+                Message = "Order created successfully"
             });
         }
 
@@ -73,15 +89,18 @@ namespace SalonSystem.Controllers
 
             if (!serv)
             {
-                return NotFound(new
+                return NotFound(new ApiResponse<OrderResponse>
                 {
-                    message = "order not found"
+                    Success = false,
+                    Message = "Order not found"
                 });
             }
 
-            return Ok(new
+            return Ok(new ApiResponse<bool>
             {
-                message = "order updated successfully"
+                Success = true,
+                Data = true,
+                Message = "Order updated successfully"
             });
         }
     }

@@ -53,7 +53,7 @@ GET {{ss}}/api/user
 Accept: application/json
 ###
 //get user by id
-GET {{ss}}/api/user?userId=17
+GET {{ss}}/api/user?userId=15
 Accept: application/json
 
 ###
@@ -61,9 +61,9 @@ Accept: application/json
 Post {{ss}}/api/user
 Content-Type: application/json
 {
-  "firstName" : "erum",
-  "lastName" : "hammad",
-  "userPhone" : "0123-22456098"
+  "firstName" : "",
+  "lastName" : "amarahh",
+  "userPhone" : "0221-214582738"
 }
 
 ###
@@ -71,11 +71,11 @@ Content-Type: application/json
 PATCH {{ss}}/api/user/17
 Content-Type: application/json
 {
-  "userStatus" : 2
+  "userStatus" : 1
 }
 
 ###
-PATCH {{ss}}/api/user/17
+PATCH {{ss}}/api/user/85
 Content-Type: application/json
 {
   "userTypes" : 2
@@ -93,7 +93,7 @@ Content-Type: application/json
 
 ###
 //get employees
-GET {{ss}}/api/employees
+GET {{ss}}/api/employees?pageNumber=2&pageSize=5
 Accept: application/json
 
 ###
@@ -150,7 +150,7 @@ content-Type: application/json
 
 ###
 //get category
-GET {{ss}}/api/category
+GET {{ss}}/api/category?pageNumber=1&pageSize=10
 Accept: application/json
 
 ###
@@ -184,7 +184,7 @@ content-Type: application/json
 
 ###
 //get brands
-GET {{ss}}/api/brands?pageNumber=2&pageSize=5
+GET {{ss}}/api/brands?pageNumber=1&pageSize=5
 Accept: application/json
 
 ###
@@ -263,7 +263,7 @@ content-Type: application/json
 
 ###
 //get product
-GET {{ss}}/api/product?pageNumber=1&pageSize=1
+GET {{ss}}/api/product?pageNumber=1&pageSize=5
 Accept: application/json
 
 ###
@@ -276,8 +276,8 @@ Accept: application/json
 POST {{ss}}/api/product
 content-Type: application/json
 {
-  "productName" : "Lip Liner",
-  "productPrice" : 8000,
+  "productName" : "",
+  "productPrice" : -1000,
   "brandId" : 5,
   "categoryId" : 4,
   "instockQuantity" : 165
@@ -297,8 +297,8 @@ content-Type: application/json
 PATCH {{ss}}/api/product/3/quantity
 Content-Type: application/json
 {
-  "quantity": 2,
-  "productCalculate" : 2
+  "quantity": 5,
+  "productCalculate" : 1
 }
 
 
@@ -312,7 +312,7 @@ Content-Type: application/json
 
 ###
 //get services
-GET {{ss}}/api/SalonService
+GET {{ss}}/api/SalonService?pageNumber=1&pageSize=1
 Accept: application/json
 
 ###
@@ -349,7 +349,7 @@ content-Type: application/json
 
 ### 
 //get orders
-GET {{ss}}/api/order
+GET {{ss}}/api/order?pageNumber=1&pageSize=2
 Accept: application/json
 
 
@@ -393,7 +393,7 @@ Content-Type: application/json
 
 ###
 //get future orders
-GET {{ss}}/api/order/future
+GET {{ss}}/api/order/future?pageNumber=1&pageSize=2
 Accept: application/json
 
 

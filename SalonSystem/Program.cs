@@ -1,13 +1,29 @@
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SalonSystem.Data;
 using SalonSystem.Models.Configurations;
+using SalonSystem.Models.DTOs.ResponseModels;
 using SalonSystem.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().ConfigureApiBehaviorOptions(options => {
+        options.InvalidModelStateResponseFactory = context =>{
+            var errors = context.ModelState
+                .Where(x => x.Value?.Errors.Count > 0)
+                .SelectMany(x => x.Value!.Errors)
+                .Select(x => x.ErrorMessage)
+                .ToList();
+
+            return new BadRequestObjectResult(new ApiResponse<object>
+            {
+                Success = false,
+                Message = string.Join(", ", errors)
+            });
+        };
+    });
 
 builder.Services.AddDbContext<SalonSystemDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));

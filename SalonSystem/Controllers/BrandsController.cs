@@ -5,6 +5,7 @@ using SalonSystem.Models.Configurations;
 using SalonSystem.Models.DTOs.RequestModels;
 using SalonSystem.Services;
 using Microsoft.Extensions.Options;
+using SalonSystem.Models.DTOs.ResponseModels;
 
 namespace SalonSystem.Controllers
 {
@@ -29,18 +30,29 @@ namespace SalonSystem.Controllers
                 var ser = await _services.GetBrandsById(brandId.Value);
                 if (ser is null)
                 {
-                    return NotFound(new
+                    return NotFound(new ApiResponse<BrandResponse>
                     {
-                        message = "Brand not found."
+                        Success = false,
+                        Message = "Brand not found."
                     });
                 }
-                return Ok(ser);
+                return Ok(new ApiResponse<BrandResponse>
+                {
+                    Success = true,
+                    Data = ser
+                });
             }
 
             int finalPageNumber = pageNumber ?? _paginationSettings.DefaultPageNumber;
             int finalPageSize = pageSize ?? _paginationSettings.DefaultPageSize;
+
             var serv = await _services.GetAllBrands(finalPageNumber, finalPageSize);
-            return Ok(serv);
+
+            return Ok(new ApiResponse<IEnumerable<BrandResponse>>
+            {
+                Success = true,
+                Data = serv
+            });
         }
 
 
@@ -49,10 +61,12 @@ namespace SalonSystem.Controllers
         {
             var serv = await _services.CreateBrand(request);
 
-            return CreatedAtAction(nameof(GetBrands), new { brandId = serv }, new
+            return CreatedAtAction(nameof(GetBrands), new { brandId = serv }, new ApiResponse<int>
             {
-                message = "Brand created successfully.",
-                categoryId = serv
+                Success = true,
+                Data = serv,
+                Message = "Brand created successfully."
+                
             });
         }
 
@@ -63,15 +77,20 @@ namespace SalonSystem.Controllers
 
             if (!serv)
             {
-                return NotFound(new
+                return NotFound(new ApiResponse<BrandResponse>
                 {
-                    message = "Brand not found"
+                    Success = false,
+                    Message = "Brand not found."
+
                 });
             }
 
-            return Ok(new
+            return Ok(new ApiResponse<bool>
             {
-                message = "Brand updated successfully"
+                Success = true,
+                Data = true,
+                Message = "Brand updated successfully."
+
             });
         }
     }

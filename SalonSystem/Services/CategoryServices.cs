@@ -38,7 +38,7 @@ namespace SalonSystem.Services
         }
 
         // get by id
-        public async Task<CategoryResponse> GetCategoryById(int categoryId)
+        public async Task<CategoryResponse?> GetCategoryById(int categoryId)
         {
             using var connection = _connectionFactory.CreateConnection();
 

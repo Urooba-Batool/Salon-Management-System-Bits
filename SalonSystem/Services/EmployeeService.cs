@@ -41,7 +41,7 @@ namespace SalonSystem.Services
         }
 
 
-        public async Task<EmployeeResponse> GetEmployeeById(int employeeId)
+        public async Task<EmployeeResponse?> GetEmployeeById(int employeeId)
         {
             using var connection = _connectionFactory.CreateConnection();
 

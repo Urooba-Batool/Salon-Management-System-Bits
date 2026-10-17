@@ -42,7 +42,7 @@ namespace SalonSystem.Services
 
 
         //get user by id
-        public async Task<UserResponse> GetUserById(int userId)
+        public async Task<UserResponse?> GetUserById(int userId)
         {
             using var connection = _connectionFactory.CreateConnection();
 

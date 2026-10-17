@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SalonSystem.Models.DTOs.RequestModels;
+using SalonSystem.Models.DTOs.ResponseModels;
 using SalonSystem.Models.Entities;
 using SalonSystem.Services;
+using System.Runtime.ConstrainedExecution;
 
 namespace SalonSystem.Controllers
 {
@@ -27,17 +29,26 @@ namespace SalonSystem.Controllers
                 var ser = await _services.GetRoleById(roleId.Value);
                 if (ser is null)
                 {
-                    return NotFound(new
+                    return NotFound(new ApiResponse<RolesResponse>
                     {
-                        message = "Role not found."
+                        Success = false,
+                        Message = "Role not found."
                     });
                 }
-                return Ok(ser);
+                return Ok(new ApiResponse<RolesResponse>
+                {
+                    Success = true,
+                    Data = ser
+                });
             }
 
             var serv = await _services.GetAllRoles();
 
-            return Ok(serv);
+            return Ok(new ApiResponse<IEnumerable<RolesResponse>>
+            {
+                Success = true,
+                Data = serv
+            });
         }
 
 
@@ -47,10 +58,11 @@ namespace SalonSystem.Controllers
         {
             var serv = await _services.CreateRole(request);
 
-            return CreatedAtAction(nameof(GetRoles), new {roleId = serv}, new
+            return CreatedAtAction(nameof(GetRoles), new {roleId = serv}, new ApiResponse<int>
             {
-                message = "Role created successfully.",
-                roleId = serv
+                Success = true,
+                Data = serv,
+                Message = "Role created successfully."
             });
         }
 
@@ -63,15 +75,18 @@ namespace SalonSystem.Controllers
 
             if (!serv)
             {
-                return NotFound(new
+                return NotFound(new ApiResponse<RolesResponse>
                 {
-                    message = "Role not found"
+                    Success = false,
+                    Message = "Role not found."
                 });
             }
 
-            return Ok(new
+            return Ok(new ApiResponse<bool>
             {
-                message = "Role updated successfully"
+                Success = true,
+                Data = true,
+                Message = "Role updated successfully"
             });
         }
 
